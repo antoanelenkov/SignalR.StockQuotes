@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace StockQuotes.ConsoleHost.Hubs
 {
-    class StockQuoteHub : Hub
+    public class StockQuoteHub : Hub
     {
         private IStockQuotesService _stockQuotesService;
 
@@ -25,7 +25,7 @@ namespace StockQuotes.ConsoleHost.Hubs
                 e => UpdateStockQuotes(),
                 null,
                 TimeSpan.Zero,
-                TimeSpan.FromMilliseconds(1000));
+                TimeSpan.FromMilliseconds(3000));
         }
 
         public void Send(string symbol, decimal? ask)
@@ -33,11 +33,22 @@ namespace StockQuotes.ConsoleHost.Hubs
             Clients.All.UpdateStock(symbol, ask);
         }
 
+        public void GetUpdate(string symbol)
+        {
+            UpdateStockQuote(symbol);
+        }
+
         private void UpdateStockQuotes()
         {
            var quotes =  this._stockQuotesService.GetAllQuotes();
             var first = quotes.FirstOrDefault();
             Send(first?.Symbol,first?.Ask);
+        }
+
+        private void UpdateStockQuote(string symbol)
+        {
+            var quote = this._stockQuotesService.Get(symbol);
+            Send(quote?.Symbol, quote?.Ask);
         }
     }
 }

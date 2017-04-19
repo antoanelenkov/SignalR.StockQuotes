@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockQuotes.ConsoleHost", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockQuotes.Providers", "StockQuotes.Providers\StockQuotes.Providers.csproj", "{5CB590D7-CAC2-43F2-ADF5-89A5E1D16737}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockQuotes.Client", "StockQuotes.Client\StockQuotes.Client.csproj", "{CF870BB4-7DF5-4D5C-974D-585AAD5EF5EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5CB590D7-CAC2-43F2-ADF5-89A5E1D16737}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CB590D7-CAC2-43F2-ADF5-89A5E1D16737}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CB590D7-CAC2-43F2-ADF5-89A5E1D16737}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF870BB4-7DF5-4D5C-974D-585AAD5EF5EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF870BB4-7DF5-4D5C-974D-585AAD5EF5EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF870BB4-7DF5-4D5C-974D-585AAD5EF5EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF870BB4-7DF5-4D5C-974D-585AAD5EF5EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="IStockQuotesService.cs" />
     <Compile Include="Providers\IProvider.cs" />
-    <Compile Include="Providers\YahooProvider\IMappable.cs" />
+    <Compile Include="Providers\IMappable.cs" />
     <Compile Include="QuoteDTO.cs" />
     <Compile Include="Providers\YahooProvider\SchemaModels\LastTradeWithTime.cs" />
     <Compile Include="Providers\YahooProvider\SchemaModels\Quote.cs" />

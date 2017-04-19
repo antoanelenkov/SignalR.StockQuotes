@@ -25,15 +25,16 @@ namespace StockQuotes.Providers
             return Parse(quoteSymbolsToFetch, doc);
         }
 
-        private IEnumerable<QuoteDTO> Parse(IEnumerable<string> quoteCodes, XDocument doc)
+        private IEnumerable<QuoteDTO> Parse(IEnumerable<string> quoteSymbols, XDocument doc)
         {
             var resultQoutes = new List<QuoteDTO>();
             IEnumerable<XElement> xmlQuoteElements = doc.Root.Element("results").Elements("quote")
-                .Where(x => quoteCodes.Contains(x.Attribute("symbol").Value));
+                .Where(x => quoteSymbols.Contains(x.Attribute("symbol").Value));
 
             foreach (XElement q in xmlQuoteElements)
             {
                 var quote = new Quote();
+                quote.Symbol = q.Attribute("symbol").Value;
                 quote.Ask = GetDecimal(q.Element("Ask").Value);
                 quote.Bid = GetDecimal(q.Element("Bid").Value);
                 quote.AverageDailyVolume = GetDecimal(q.Element("AverageDailyVolume").Value);

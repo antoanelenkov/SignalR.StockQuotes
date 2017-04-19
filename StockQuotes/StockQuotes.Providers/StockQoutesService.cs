@@ -11,7 +11,7 @@ namespace StockQuotes.Providers
     {
         private readonly IProvider _provider;
 
-        private List<string> _quoteSymbols = new List<string>() { "AAPL" };
+        private List<string> _quoteSymbols = new List<string>() { "AAPL", "MSFT" };
 
         public StockQoutesService(IProvider provider)
         {

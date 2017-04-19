@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StockQuotes.Providers.Providers.YahooProvider
+namespace StockQuotes.Providers.Providers
 {
     interface IMappable<T>
         where T: class 
