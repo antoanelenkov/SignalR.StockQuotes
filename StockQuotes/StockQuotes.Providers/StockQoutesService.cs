@@ -11,26 +11,21 @@ namespace StockQuotes.Providers
     {
         private readonly IProvider _provider;
 
-        private List<string> _quoteSymbols = new List<string>() { "AAPL", "MSFT" };
+        private List<string> _quoteSymbols = new List<string>() { "AAPL", "MSFT", "BP", "AMD", "PFE", "GILD", "CHTR", "MA", "MRK" };
 
         public StockQoutesService(IProvider provider)
         {
             this._provider = provider;
         }
 
-        public QuoteDTO Get(string symbol)
+        public async Task<IEnumerable<QuoteDTO>> GetAllQuotesAsync()
         {
-            return this._provider.Fetch(new List<string>() { symbol }).FirstOrDefault();
+            return await Task.Run(() => { return this._provider.Fetch(_quoteSymbols); });
         }
 
-        public IEnumerable<QuoteDTO> GetAllQuotes()
+        public async Task<IEnumerable<QuoteDTO>> GetSpecificQuotesAsync(IEnumerable<string> symbols)
         {
-            return this._provider.Fetch(_quoteSymbols);
-        }
-
-        public IEnumerable<QuoteDTO> GetAllQuotes(IEnumerable<string> symbols)
-        {
-            return this._provider.Fetch(symbols);
+            return await Task.Run(() => { return this._provider.Fetch(symbols); });
         }
 
         public async Task<QuoteDTO> GetAsync(string symbol)

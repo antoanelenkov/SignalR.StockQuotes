@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.SignalR;
 using StockQuotes.Providers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,33 +13,18 @@ namespace StockQuotes.ConsoleHost.Hubs
     public class StockQuoteHub : Hub<IStockClient>
     {
         private static IStockQuotesService _stockQuotesService = new StockQoutesService(new YahooProvider());
-
-        public void SendToAll(string symbol, decimal? ask)
+        public static ConcurrentDictionary<string, List<string>> userSpecificQoutes = new ConcurrentDictionary<string, List<string>>();
+        
+        public async void UpdateCallerStockQuotes(string symbol)
         {
-            Clients.All.UpdateStock(symbol, ask);
-        }
+            if (!userSpecificQoutes.ContainsKey(Context.ConnectionId))
+            {
+                userSpecificQoutes[Context.ConnectionId] = new List<string>();
+            }
+            userSpecificQoutes[Context.ConnectionId].Add(symbol);
 
-        public void SendToCaller(string symbol, decimal? ask)
-        {
-            Clients.Caller.UpdateStock(symbol, ask);
-        }
-
-        public async Task GetUpdate(string symbol)
-        {
-            await UpdateCallerStockQuote(symbol);
-        }
-
-        private void UpdateStockQuotes()
-        {
-            var quotes = _stockQuotesService.GetAllQuotes();
-            var first = quotes.FirstOrDefault();
-            SendToAll(first?.Symbol, first?.Ask);
-        }
-
-        private async Task UpdateCallerStockQuote(string symbol)
-        {
-            var quote = await _stockQuotesService.GetAsync(symbol);
-            SendToCaller(quote?.Symbol, quote?.Ask);
+            var quotes = await _stockQuotesService.GetSpecificQuotesAsync(userSpecificQoutes[Context.ConnectionId]);
+            Clients.Caller.UpdateStock(quotes);
         }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using StockQuotes.ConsoleHost.Hubs;
 using StockQuotes.Providers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,16 +26,22 @@ namespace StockQuotes.ConsoleHost
             _stockQuotesService = new StockQoutesService(new YahooProvider());
         }
 
-        private void OnTimerElapsed(object sender)
+        private async void OnTimerElapsed(object sender)
         {
-            var quotes = _stockQuotesService.GetAllQuotes();
-            var first = quotes.FirstOrDefault();
-            _hub.Clients.All.UpdateStock(first.Symbol, first.Ask);
+            var allQuotes = await _stockQuotesService.GetAllQuotesAsync();
+            _hub.Clients.All.UpdateStocks(allQuotes);
+            var userSpecificCollection = new ConcurrentDictionary<string, List<string>>(StockQuoteHub.userSpecificQoutes);
+
+            foreach (var connectionInfo in userSpecificCollection)
+            {
+                var quotes = await _stockQuotesService.GetSpecificQuotesAsync(connectionInfo.Value);
+                _hub.Clients.Client(connectionInfo.Key).UpdateStocks(quotes);
+            }       
         }
 
         public void Start()
         {
-            _taskTimer = new Timer(OnTimerElapsed, null, TimeSpan.FromMilliseconds(500), TimeSpan.FromSeconds(1));
+            _taskTimer = new Timer(OnTimerElapsed, null, TimeSpan.FromMilliseconds(1000), TimeSpan.FromSeconds(1));
         }
 
         public void Stop()

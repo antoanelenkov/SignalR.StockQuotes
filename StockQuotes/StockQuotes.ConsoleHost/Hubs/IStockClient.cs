@@ -1,7 +1,10 @@
-﻿namespace StockQuotes.ConsoleHost.Hubs
+﻿using StockQuotes.Providers;
+using System.Collections.Generic;
+
+namespace StockQuotes.ConsoleHost.Hubs
 {
     public interface IStockClient
     {
-        void UpdateStock(string symbol, decimal? ask);
+        void UpdateStock(IEnumerable<QuoteDTO> qoutes);
     }
 }

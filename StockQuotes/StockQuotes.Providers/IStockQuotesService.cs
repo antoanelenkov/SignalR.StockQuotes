@@ -8,11 +8,10 @@ namespace StockQuotes.Providers
 {
     public interface IStockQuotesService
     {
-        IEnumerable<QuoteDTO> GetAllQuotes();
+        Task<IEnumerable<QuoteDTO>> GetAllQuotesAsync();
 
-        IEnumerable<QuoteDTO> GetAllQuotes(IEnumerable<string> symbols);
-
-        QuoteDTO Get(string symbol);
+        Task<IEnumerable<QuoteDTO>> GetSpecificQuotesAsync(IEnumerable<string> symbols);
+        
 
         Task<QuoteDTO> GetAsync(string symbol);
     }
