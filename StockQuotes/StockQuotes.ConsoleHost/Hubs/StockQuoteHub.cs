@@ -9,46 +9,36 @@ using System.Threading.Tasks;
 
 namespace StockQuotes.ConsoleHost.Hubs
 {
-    public class StockQuoteHub : Hub
+    public class StockQuoteHub : Hub<IStockClient>
     {
-        private IStockQuotesService _stockQuotesService;
+        private static IStockQuotesService _stockQuotesService = new StockQoutesService(new YahooProvider());
 
-        public StockQuoteHub(IStockQuotesService stockQuotesService)
-        {
-            this._stockQuotesService = stockQuotesService;
-        }
-
-        public StockQuoteHub()
-        {
-            this._stockQuotesService = new StockQoutesService(new YahooProvider());
-            new Timer(
-                e => UpdateStockQuotes(),
-                null,
-                TimeSpan.Zero,
-                TimeSpan.FromMilliseconds(3000));
-        }
-
-        public void Send(string symbol, decimal? ask)
+        public void SendToAll(string symbol, decimal? ask)
         {
             Clients.All.UpdateStock(symbol, ask);
         }
 
-        public void GetUpdate(string symbol)
+        public void SendToCaller(string symbol, decimal? ask)
         {
-            UpdateStockQuote(symbol);
+            Clients.Caller.UpdateStock(symbol, ask);
+        }
+
+        public async Task GetUpdate(string symbol)
+        {
+            await UpdateCallerStockQuote(symbol);
         }
 
         private void UpdateStockQuotes()
         {
-           var quotes =  this._stockQuotesService.GetAllQuotes();
+            var quotes = _stockQuotesService.GetAllQuotes();
             var first = quotes.FirstOrDefault();
-            Send(first?.Symbol,first?.Ask);
+            SendToAll(first?.Symbol, first?.Ask);
         }
 
-        private void UpdateStockQuote(string symbol)
+        private async Task UpdateCallerStockQuote(string symbol)
         {
-            var quote = this._stockQuotesService.Get(symbol);
-            Send(quote?.Symbol, quote?.Ask);
+            var quote = await _stockQuotesService.GetAsync(symbol);
+            SendToCaller(quote?.Symbol, quote?.Ask);
         }
     }
 }

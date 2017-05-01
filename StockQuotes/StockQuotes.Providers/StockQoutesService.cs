@@ -32,5 +32,11 @@ namespace StockQuotes.Providers
         {
             return this._provider.Fetch(symbols);
         }
+
+        public async Task<QuoteDTO> GetAsync(string symbol)
+        {
+            return await Task.Run(() =>
+             { return this._provider.Fetch(new List<string>() { symbol }).FirstOrDefault(); });
+        }
     }
 }

@@ -9,6 +9,7 @@
         {
             app.UseCors(CorsOptions.AllowAll);
             app.MapSignalR();
+            new PushService().Start();
         }
     }
 }

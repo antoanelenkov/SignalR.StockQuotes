@@ -26,27 +26,29 @@
     <!--Add script to update the page and send messages.-->
     <script type="text/javascript">
         $(function () {
-        //Set the hubs URL for the connection
+            //Set the hubs URL for the connection
             $.connection.hub.url = "http://localhost:8080/signalr";
 
             // Declare a proxy to reference the hub.
-            var stockQutes = $.connection.stockQuoteHub;
+            var stockQuotes = $.connection.stockQuoteHub;
 
             var symbolEl = document.getElementById('symbol');
             var askEl = document.getElementById('ask');
             // Create a function that the hub can call to broadcast messages.
-            stockQutes.client.updateStock = function (symbol, ask) {
+            stockQuotes.client.updateStock = function (symbol, ask) {
                 symbolEl.innerHTML = symbol;
                 askEl.innerHTML = ask;
             };
 
-            // Start the connection.
-            $.connection.hub.start().done(function () {
-                window.getUpdate = function(symbol) {
-                    console.log('update requested');
-                    stockQutes.server.getUpdate(symbol);
-                }
-            });
+            $.connection.hub.logging = true;
+            $.connection.hub
+                .start({ transport: ['webSockets', 'serverSentEvents', 'longPolling'] })
+                .done(function () {
+                    window.getUpdate = function (symbol) {
+                        console.log("Connected, transport = " + $.connection.hub.transport.name);
+                        stockQuotes.server.getUpdate(symbol);
+                    }
+                });
         });
     </script>
 </body>

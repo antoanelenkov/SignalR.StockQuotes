@@ -13,5 +13,7 @@ namespace StockQuotes.Providers
         IEnumerable<QuoteDTO> GetAllQuotes(IEnumerable<string> symbols);
 
         QuoteDTO Get(string symbol);
+
+        Task<QuoteDTO> GetAsync(string symbol);
     }
 }
