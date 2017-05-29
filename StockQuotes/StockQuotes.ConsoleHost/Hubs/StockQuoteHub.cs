@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using StockQuotes.Providers;
 using System;
 using System.Collections.Concurrent;
@@ -15,6 +16,7 @@ namespace StockQuotes.ConsoleHost.Hubs
         private static IStockQuotesService _stockQuotesService = new StockQoutesService(new YahooProvider());
         public static ConcurrentDictionary<string, List<string>> userSpecificQoutes = new ConcurrentDictionary<string, List<string>>();
         
+        // [Authorize] - possible to 
         public async void UpdateCallerStockQuotes(string symbol)
         {
             if (!userSpecificQoutes.ContainsKey(Context.ConnectionId))
@@ -25,6 +27,7 @@ namespace StockQuotes.ConsoleHost.Hubs
 
             var quotes = await _stockQuotesService.GetSpecificQuotesAsync(userSpecificQoutes[Context.ConnectionId]);
             Clients.Caller.UpdateStock(quotes);
+            
         }
     }
 }

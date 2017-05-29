@@ -41,7 +41,7 @@ namespace StockQuotes.ConsoleHost
 
         public void Start()
         {
-            _taskTimer = new Timer(OnTimerElapsed, null, TimeSpan.FromMilliseconds(1000), TimeSpan.FromSeconds(1));
+            _taskTimer = new Timer(OnTimerElapsed, null, TimeSpan.FromMilliseconds(500), TimeSpan.FromSeconds(1));
         }
 
         public void Stop()

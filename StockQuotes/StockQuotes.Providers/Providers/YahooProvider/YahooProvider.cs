@@ -21,8 +21,16 @@ namespace StockQuotes.Providers
             string symbolList = String.Join("%2C", quoteSymbolsToFetch.Select(w => "%22" + w + "%22").ToArray());
             string url = string.Format(BaseUrl, symbolList);
 
-            XDocument doc = XDocument.Load(url);
-            return Parse(quoteSymbolsToFetch, doc);
+            XDocument doc;
+            try
+            {
+                doc = XDocument.Load(url);
+                return Parse(quoteSymbolsToFetch, doc);
+            }
+            catch (Exception ex)
+            {
+                return new List<QuoteDTO>();
+            }
         }
 
         private IEnumerable<QuoteDTO> Parse(IEnumerable<string> quoteSymbols, XDocument doc)
